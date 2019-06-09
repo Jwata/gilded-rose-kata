@@ -1,4 +1,9 @@
 # GO Starter
+- Prepare :
+```shell
+go get -u github.com/golang/dep/cmd/dep
+dep ensure
+```
 
 - Run :
 
