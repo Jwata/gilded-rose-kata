@@ -2,12 +2,31 @@ package main
 
 import "fmt"
 
+type ItemInterface interface {
+	Name() string
+	SellIn() int
+	Quality() int
+	Update()
+}
+
 type Item struct {
 	name            string
 	sellIn, quality int
 }
 
-func (item *Item) update() {
+func (item *Item) Name() string {
+	return item.name
+}
+
+func (item *Item) SellIn() int {
+	return item.sellIn
+}
+
+func (item *Item) Quality() int {
+	return item.quality
+}
+
+func (item *Item) Update() {
 	if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" {
 		if item.quality > 0 {
 			if item.name != "Sulfuras, Hand of Ragnaros" {
@@ -55,13 +74,13 @@ func (item *Item) update() {
 	}
 }
 
-var items = []*Item{
-	{"+5 Dexterity Vest", 10, 20},
-	{"Aged Brie", 2, 0},
-	{"Elixir of the Mongoose", 5, 7},
-	{"Sulfuras, Hand of Ragnaros", 0, 80},
-	{"Backstage passes to a TAFKAL80ETC concert", 15, 20},
-	{"Conjured Mana Cake", 3, 6},
+var items = []ItemInterface{
+	&Item{"+5 Dexterity Vest", 10, 20},
+	&Item{"Aged Brie", 2, 0},
+	&Item{"Elixir of the Mongoose", 5, 7},
+	&Item{"Sulfuras, Hand of Ragnaros", 0, 80},
+	&Item{"Backstage passes to a TAFKAL80ETC concert", 15, 20},
+	&Item{"Conjured Mana Cake", 3, 6},
 }
 
 func main() {
@@ -70,9 +89,9 @@ func main() {
 	GildedRose(items)
 }
 
-func GildedRose(items []*Item) {
+func GildedRose(items []ItemInterface) {
 	for i := 0; i < len(items); i++ {
 		item := items[i]
-		item.update()
+		item.Update()
 	}
 }
