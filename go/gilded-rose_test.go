@@ -7,6 +7,10 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+func Test_Main(t *testing.T) {
+	assert.NotPanics(t, main)
+}
+
 type TestItem struct{ mock.Mock }
 
 func (item *TestItem) Name() string { return "Mock item" }
@@ -28,6 +32,27 @@ func Test_GildedRose(t *testing.T) {
 
 	item1.AssertCalled(t, "Update")
 	item2.AssertCalled(t, "Update")
+}
+
+func Test_Item_Name(t *testing.T) {
+	name := "test item"
+	item := &Item{name, 0, 0}
+
+	assert.Equal(t, name, item.Name())
+}
+
+func Test_Item_SellIn(t *testing.T) {
+	sellIn := 1
+	item := &Item{"", sellIn, 0}
+
+	assert.Equal(t, sellIn, item.SellIn())
+}
+
+func Test_Item_Quality(t *testing.T) {
+	quality := 1
+	item := &Item{"", 0, quality}
+
+	assert.Equal(t, quality, item.Quality())
 }
 
 func Test_Item_Update_DecreasesSellInByOne(t *testing.T) {

@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 const MaxQuality = 50
 
 const QualitySulfuras = 80
@@ -126,22 +124,22 @@ var items = []ItemInterface{
 }
 
 func main() {
-	fmt.Println("OMGHAI!")
+	// fmt.Println("OMGHAI!")
 
-	fmt.Println("Before update")
-	printItems(items)
+	// fmt.Println("Before update")
+	// printItems(items)
 
 	GildedRose(items)
 
-	fmt.Println("After update")
-	printItems(items)
+	// fmt.Println("After update")
+	// printItems(items)
 }
 
-func printItems(items []ItemInterface) {
-	for _, item := range items {
-		fmt.Println(item.Name(), item.SellIn(), item.Quality())
-	}
-}
+// func printItems(items []ItemInterface) {
+// 	for _, item := range items {
+// 		fmt.Println(item.Name(), item.SellIn(), item.Quality())
+// 	}
+// }
 
 func GildedRose(items []ItemInterface) {
 	for i := 0; i < len(items); i++ {
