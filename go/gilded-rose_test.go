@@ -167,7 +167,7 @@ func Test_BackStagePasses_Update_DropsQualityToZeroAfterTheSellInDate(t *testing
 }
 
 func Test_ConjuredItem_Update_DecreasesQualityTwiceFast(t *testing.T) {
-	quality := 5
+	quality := 7
 	conjuredItem := NewConjuredItem("Conjured Mana Cake", 1, quality)
 
 	expected := quality - 2
@@ -177,4 +177,16 @@ func Test_ConjuredItem_Update_DecreasesQualityTwiceFast(t *testing.T) {
 	expected -= 4
 	conjuredItem.Update()
 	assert.Equal(t, expected, conjuredItem.Quality())
+}
+
+func Test_ConjuredItem_Update_QualityNeverBecomeNegative(t *testing.T) {
+	conjuredItemBeforeSellIn := NewConjuredItem("Conjured Mana Cake", 1, 1)
+
+	conjuredItemBeforeSellIn.Update()
+	assert.Equal(t, 0, conjuredItemBeforeSellIn.Quality())
+
+	conjuredItemAfterSellIn := NewConjuredItem("Conjured Mana Cake", 0, 3)
+
+	conjuredItemAfterSellIn.Update()
+	assert.Equal(t, 0, conjuredItemAfterSellIn.Quality())
 }

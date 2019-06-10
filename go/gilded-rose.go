@@ -29,17 +29,21 @@ func (item *Item) Quality() int {
 }
 
 func (item *Item) Update() {
-	if item.quality > 0 {
-		item.quality = item.quality - 1
-	}
+	item.decreaseQuality(1)
 
 	item.sellIn = item.sellIn - 1
 
 	if item.sellIn < 0 {
-		if item.quality > 0 {
-			item.quality = item.quality - 1
-		}
+		item.decreaseQuality(1)
 	}
+}
+
+func (item *Item) decreaseQuality(amt int) {
+	quality := item.quality - amt
+	if quality < 0 {
+		quality = 0
+	}
+	item.quality = quality
 }
 
 func (item *Item) incrementQuality() {
@@ -107,10 +111,12 @@ func NewConjuredItem(name string, sellIn, quality int) *ConjuredItem {
 }
 
 func (item *ConjuredItem) Update() {
-	item.quality -= 2
+	item.decreaseQuality(2)
+
 	item.sellIn -= 1
+
 	if item.sellIn < 0 {
-		item.quality -= 2
+		item.decreaseQuality(2)
 	}
 }
 
