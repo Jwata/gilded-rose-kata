@@ -96,17 +96,11 @@ func Test_AgedBrid_Update_QualityNeverBecomeMoreThan50(t *testing.T) {
 	assert.Equal(t, MaxQualityAgedBrie, agedBrieAfterSellIn.Quality())
 }
 
-func Test_Sulfuras_Update_NeverChangeSellIn(t *testing.T) {
-	sulfuras := &Item{"Sulfuras, Hand of Ragnaros", 0, QualitySulfuras}
+func Test_Sulfuras_Update_NeverChangeSellInAndQuality(t *testing.T) {
+	sulfuras := NewSulfurasItem("Sulfuras, Hand of Ragnaros")
 	sulfuras.Update()
 
 	assert.Equal(t, 0, sulfuras.SellIn())
-}
-
-func Test_Sulfuras_Update_NeverChangeQuality(t *testing.T) {
-	sulfuras := &Item{"Sulfuras, Hand of Ragnaros", 0, QualitySulfuras}
-	sulfuras.Update()
-
 	assert.Equal(t, QualitySulfuras, sulfuras.Quality())
 }
 
