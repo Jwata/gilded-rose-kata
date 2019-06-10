@@ -78,19 +78,47 @@ func (item *Item) Update() {
 	}
 }
 
+type ConjuredItem struct {
+	*Item
+}
+
+func NewConjuredItem(name string, sellIn, quality int) *ConjuredItem {
+	return &ConjuredItem{&Item{name, sellIn, quality}}
+}
+
+func (item *ConjuredItem) Update() {
+	item.quality -= 2
+	item.sellIn -= 1
+	if item.sellIn < 0 {
+		item.quality -= 2
+	}
+}
+
 var items = []ItemInterface{
 	&Item{"+5 Dexterity Vest", 10, 20},
 	&Item{"Aged Brie", 2, 0},
 	&Item{"Elixir of the Mongoose", 5, 7},
 	&Item{"Sulfuras, Hand of Ragnaros", 0, QualitySulfuras},
 	&Item{"Backstage passes to a TAFKAL80ETC concert", 15, 20},
-	&Item{"Conjured Mana Cake", 3, 6},
+	NewConjuredItem("Conjured Mana Cake", 3, 6),
 }
 
 func main() {
 	fmt.Println("OMGHAI!")
-	// fmt.Print(items)
+
+	fmt.Println("Before update")
+	printItems(items)
+
 	GildedRose(items)
+
+	fmt.Println("After update")
+	printItems(items)
+}
+
+func printItems(items []ItemInterface) {
+	for _, item := range items {
+		fmt.Println(item.Name(), item.SellIn(), item.Quality())
+	}
 }
 
 func GildedRose(items []ItemInterface) {

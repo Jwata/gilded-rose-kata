@@ -146,3 +146,16 @@ func Test_BackStagePasses_Update_DropsQualityToZeroAfterTheSellInDate(t *testing
 
 	assert.Equal(t, 0, bsPasses.Quality())
 }
+
+func Test_ConjuredItem_Update_DecreasesQualityTwiceFast(t *testing.T) {
+	quality := 5
+	conjuredItem := NewConjuredItem("Conjured Mana Cake", 1, quality)
+
+	expected := quality - 2
+	conjuredItem.Update()
+	assert.Equal(t, expected, conjuredItem.Quality())
+
+	expected -= 4
+	conjuredItem.Update()
+	assert.Equal(t, expected, conjuredItem.Quality())
+}
