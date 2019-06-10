@@ -70,7 +70,7 @@ func Test_Item_Update_QualityNeverBecomeNegative(t *testing.T) {
 
 func Test_AgedBrie_Update_IncreasesQualityByOneBeforeSellInDate(t *testing.T) {
 	quality := 1
-	agedBrie := &Item{"Aged Brie", 1, quality}
+	agedBrie := NewAgedBrie("Aged Brie", 1, quality)
 	agedBrie.Update()
 
 	assert.Equal(t, quality+1, agedBrie.Quality())
@@ -78,26 +78,26 @@ func Test_AgedBrie_Update_IncreasesQualityByOneBeforeSellInDate(t *testing.T) {
 
 func Test_AgedBrie_Update_IncreasesQualityByTwoAfterSellInDate(t *testing.T) {
 	quality := 1
-	agedBrie := &Item{"Aged Brie", -1, quality}
+	agedBrie := NewAgedBrie("Aged Brie", -1, quality)
 	agedBrie.Update()
 
 	assert.Equal(t, quality+2, agedBrie.Quality())
 }
 
 func Test_AgedBrid_Update_QualityNeverBecomeMoreThan50(t *testing.T) {
-	agedBrieBeforeSellIn := &Item{"Aged Brie", 1, MaxQualityAgedBrie}
+	agedBrieBeforeSellIn := NewAgedBrie("Aged Brie", 1, MaxQuality)
 	agedBrieBeforeSellIn.Update()
 
-	assert.Equal(t, agedBrieBeforeSellIn.Quality(), MaxQualityAgedBrie)
+	assert.Equal(t, MaxQuality, agedBrieBeforeSellIn.Quality())
 
-	agedBrieAfterSellIn := &Item{"Aged Brie", -1, MaxQualityAgedBrie - 1}
+	agedBrieAfterSellIn := NewAgedBrie("Aged Brie", -1, MaxQuality-1)
 	agedBrieAfterSellIn.Update()
 
-	assert.Equal(t, MaxQualityAgedBrie, agedBrieAfterSellIn.Quality())
+	assert.Equal(t, MaxQuality, agedBrieAfterSellIn.Quality())
 }
 
 func Test_Sulfuras_Update_NeverChangeSellInAndQuality(t *testing.T) {
-	sulfuras := NewSulfurasItem("Sulfuras, Hand of Ragnaros")
+	sulfuras := NewSulfuras("Sulfuras, Hand of Ragnaros")
 	sulfuras.Update()
 
 	assert.Equal(t, 0, sulfuras.SellIn())

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-const MaxQualityAgedBrie = 50
+const MaxQuality = 50
 
 const QualitySulfuras = 80
 
@@ -31,7 +31,7 @@ func (item *Item) Quality() int {
 }
 
 func (item *Item) Update() {
-	if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" {
+	if item.name != "Backstage passes to a TAFKAL80ETC concert" {
 		if item.quality > 0 {
 			item.quality = item.quality - 1
 		}
@@ -56,31 +56,47 @@ func (item *Item) Update() {
 	item.sellIn = item.sellIn - 1
 
 	if item.sellIn < 0 {
-		if item.name != "Aged Brie" {
-			if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-				if item.quality > 0 {
-					item.quality = item.quality - 1
-				}
-			} else {
-				item.quality = item.quality - item.quality
+		if item.name != "Backstage passes to a TAFKAL80ETC concert" {
+			if item.quality > 0 {
+				item.quality = item.quality - 1
 			}
 		} else {
-			if item.quality < 50 {
-				item.quality = item.quality + 1
-			}
+			item.quality = item.quality - item.quality
 		}
 	}
 }
 
-type SulfurasItem struct {
+type AgedBrie struct {
 	*Item
 }
 
-func NewSulfurasItem(name string) *SulfurasItem {
-	return &SulfurasItem{&Item{name, 0, QualitySulfuras}}
+func NewAgedBrie(name string, sellIn, quality int) *AgedBrie {
+	return &AgedBrie{&Item{name, sellIn, quality}}
 }
 
-func (item *SulfurasItem) Update() {}
+func (item *AgedBrie) Update() {
+	item.increaseQuality()
+	item.sellIn -= 1
+	if item.sellIn < 0 {
+		item.increaseQuality()
+	}
+}
+
+func (item *AgedBrie) increaseQuality() {
+	if item.quality < MaxQuality {
+		item.quality += 1
+	}
+}
+
+type Sulfuras struct {
+	*Item
+}
+
+func NewSulfuras(name string) *Sulfuras {
+	return &Sulfuras{&Item{name, 0, QualitySulfuras}}
+}
+
+func (item *Sulfuras) Update() {}
 
 type ConjuredItem struct {
 	*Item
@@ -100,9 +116,9 @@ func (item *ConjuredItem) Update() {
 
 var items = []ItemInterface{
 	&Item{"+5 Dexterity Vest", 10, 20},
-	&Item{"Aged Brie", 2, 0},
+	NewAgedBrie("Aged Brie", 2, 0),
 	&Item{"Elixir of the Mongoose", 5, 7},
-	NewSulfurasItem("Sulfuras, Hand of Ragnaros"),
+	NewSulfuras("Sulfuras, Hand of Ragnaros"),
 	&Item{"Backstage passes to a TAFKAL80ETC concert", 15, 20},
 	NewConjuredItem("Conjured Mana Cake", 3, 6),
 }
