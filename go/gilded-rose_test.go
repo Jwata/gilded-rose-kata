@@ -107,7 +107,7 @@ func Test_Sulfuras_Update_NeverChangeSellInAndQuality(t *testing.T) {
 func Test_BackStagePasses_Update_IncreasesQualityByOneWhenMoreThan10Days(t *testing.T) {
 	quality := 1
 
-	bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", 11, quality}
+	bsPasses := NewBackStagePasses("Backstage passes to a TAFKAL80ETC concert", 11, quality)
 	bsPasses.Update()
 
 	assert.Equal(t, quality+1, bsPasses.Quality())
@@ -117,7 +117,7 @@ func Test_BackStagePasses_Update_IncreasesQualityByTwoWhen10DaysOrLess(t *testin
 	quality := 1
 
 	for i := 6; i <= 10; i++ {
-		bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", i, quality}
+		bsPasses := NewBackStagePasses("Backstage passes to a TAFKAL80ETC concert", i, quality)
 		bsPasses.Update()
 		assert.Equal(t, quality+2, bsPasses.Quality())
 	}
@@ -127,7 +127,7 @@ func Test_BackStagePasses_Update_IncreasesQualityByThreeWhen5DaysOrLess(t *testi
 	quality := 1
 
 	for i := 1; i <= 5; i++ {
-		bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", i, quality}
+		bsPasses := NewBackStagePasses("Backstage passes to a TAFKAL80ETC concert", i, quality)
 		bsPasses.Update()
 		assert.Equal(t, quality+3, bsPasses.Quality())
 	}
@@ -135,7 +135,7 @@ func Test_BackStagePasses_Update_IncreasesQualityByThreeWhen5DaysOrLess(t *testi
 
 func Test_BackStagePasses_Update_DropsQualityToZeroAfterTheSellInDate(t *testing.T) {
 	quality := 10
-	bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", 0, quality}
+	bsPasses := NewBackStagePasses("Backstage passes to a TAFKAL80ETC concert", 0, quality)
 	bsPasses.Update()
 
 	assert.Equal(t, 0, bsPasses.Quality())

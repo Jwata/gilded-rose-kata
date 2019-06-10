@@ -31,38 +31,22 @@ func (item *Item) Quality() int {
 }
 
 func (item *Item) Update() {
-	if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-		if item.quality > 0 {
-			item.quality = item.quality - 1
-		}
-	} else {
-		if item.quality < 50 {
-			item.quality = item.quality + 1
-			if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-				if item.sellIn < 11 {
-					if item.quality < 50 {
-						item.quality = item.quality + 1
-					}
-				}
-				if item.sellIn < 6 {
-					if item.quality < 50 {
-						item.quality = item.quality + 1
-					}
-				}
-			}
-		}
+	if item.quality > 0 {
+		item.quality = item.quality - 1
 	}
 
 	item.sellIn = item.sellIn - 1
 
 	if item.sellIn < 0 {
-		if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-			if item.quality > 0 {
-				item.quality = item.quality - 1
-			}
-		} else {
-			item.quality = item.quality - item.quality
+		if item.quality > 0 {
+			item.quality = item.quality - 1
 		}
+	}
+}
+
+func (item *Item) incrementQuality() {
+	if item.quality < MaxQuality {
+		item.quality += 1
 	}
 }
 
@@ -75,16 +59,34 @@ func NewAgedBrie(name string, sellIn, quality int) *AgedBrie {
 }
 
 func (item *AgedBrie) Update() {
-	item.increaseQuality()
+	item.incrementQuality()
 	item.sellIn -= 1
 	if item.sellIn < 0 {
-		item.increaseQuality()
+		item.incrementQuality()
 	}
 }
 
-func (item *AgedBrie) increaseQuality() {
-	if item.quality < MaxQuality {
-		item.quality += 1
+type BackstagePasses struct {
+	*Item
+}
+
+func NewBackStagePasses(name string, sellIn, quality int) *BackstagePasses {
+	return &BackstagePasses{&Item{name, sellIn, quality}}
+}
+
+func (item *BackstagePasses) Update() {
+	item.incrementQuality()
+	if item.sellIn < 11 {
+		item.incrementQuality()
+	}
+	if item.sellIn < 6 {
+		item.incrementQuality()
+	}
+
+	item.sellIn = item.sellIn - 1
+
+	if item.sellIn < 0 {
+		item.quality = 0
 	}
 }
 
@@ -119,7 +121,7 @@ var items = []ItemInterface{
 	NewAgedBrie("Aged Brie", 2, 0),
 	&Item{"Elixir of the Mongoose", 5, 7},
 	NewSulfuras("Sulfuras, Hand of Ragnaros"),
-	&Item{"Backstage passes to a TAFKAL80ETC concert", 15, 20},
+	NewBackStagePasses("Backstage passes to a TAFKAL80ETC concert", 15, 20),
 	NewConjuredItem("Conjured Mana Cake", 3, 6),
 }
 
