@@ -30,10 +30,119 @@ func Test_GildedRose(t *testing.T) {
 	item2.AssertCalled(t, "Update")
 }
 
-func Test_Item_Update_DecrementsSellInAndQuality(t *testing.T) {
-	item := &Item{"Test Item", 10, 10}
+func Test_Item_Update_DecreasesSellInByOne(t *testing.T) {
+	sellin := 2
+	item := &Item{"", sellin, 2}
 	item.Update()
 
-	assert.Equal(t, item.SellIn(), 9)
-	assert.Equal(t, item.Quality(), 9)
+	assert.Equal(t, sellin-1, item.SellIn())
+}
+
+func Test_Item_Update_DecreasesQualityByOneBeforePassingSellInDate(t *testing.T) {
+	sellin := 2
+	quality := 2
+	item := &Item{"", sellin, quality}
+	item.Update()
+
+	assert.Equal(t, quality-1, item.Quality())
+}
+
+func Test_Item_Update_DecreasesQualityByTwoAfterPassingSellInDate(t *testing.T) {
+	sellin := -1
+	quality := 3
+	item := &Item{"", sellin, quality}
+	item.Update()
+
+	assert.Equal(t, quality-2, item.Quality())
+}
+
+func Test_Item_Update_QualityNeverBecomeNegative(t *testing.T) {
+	itemBeforeSellIn := &Item{"", 1, 0}
+	itemBeforeSellIn.Update()
+
+	assert.Equal(t, 0, itemBeforeSellIn.Quality())
+
+	itemAfterSellIn := &Item{"", -1, 1}
+	itemAfterSellIn.Update()
+
+	assert.Equal(t, 0, itemAfterSellIn.Quality())
+}
+
+func Test_AgedBrie_Update_IncreasesQualityByOneBeforeSellInDate(t *testing.T) {
+	quality := 1
+	agedBrie := &Item{"Aged Brie", 1, quality}
+	agedBrie.Update()
+
+	assert.Equal(t, quality+1, agedBrie.Quality())
+}
+
+func Test_AgedBrie_Update_IncreasesQualityByTwoAfterSellInDate(t *testing.T) {
+	quality := 1
+	agedBrie := &Item{"Aged Brie", -1, quality}
+	agedBrie.Update()
+
+	assert.Equal(t, quality+2, agedBrie.Quality())
+}
+
+func Test_AgedBrid_Update_QualityNeverBecomeMoreThan50(t *testing.T) {
+	agedBrieBeforeSellIn := &Item{"Aged Brie", 1, MaxQualityAgedBrie}
+	agedBrieBeforeSellIn.Update()
+
+	assert.Equal(t, agedBrieBeforeSellIn.Quality(), MaxQualityAgedBrie)
+
+	agedBrieAfterSellIn := &Item{"Aged Brie", -1, MaxQualityAgedBrie - 1}
+	agedBrieAfterSellIn.Update()
+
+	assert.Equal(t, MaxQualityAgedBrie, agedBrieAfterSellIn.Quality())
+}
+
+func Test_Sulfuras_Update_NeverChangeSellIn(t *testing.T) {
+	sulfuras := &Item{"Sulfuras, Hand of Ragnaros", 0, QualitySulfuras}
+	sulfuras.Update()
+
+	assert.Equal(t, 0, sulfuras.SellIn())
+}
+
+func Test_Sulfuras_Update_NeverChangeQuality(t *testing.T) {
+	sulfuras := &Item{"Sulfuras, Hand of Ragnaros", 0, QualitySulfuras}
+	sulfuras.Update()
+
+	assert.Equal(t, QualitySulfuras, sulfuras.Quality())
+}
+
+func Test_BackStagePasses_Update_IncreasesQualityByOneWhenMoreThan10Days(t *testing.T) {
+	quality := 1
+
+	bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", 11, quality}
+	bsPasses.Update()
+
+	assert.Equal(t, quality+1, bsPasses.Quality())
+}
+
+func Test_BackStagePasses_Update_IncreasesQualityByTwoWhen10DaysOrLess(t *testing.T) {
+	quality := 1
+
+	for i := 6; i <= 10; i++ {
+		bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", i, quality}
+		bsPasses.Update()
+		assert.Equal(t, quality+2, bsPasses.Quality())
+	}
+}
+
+func Test_BackStagePasses_Update_IncreasesQualityByThreeWhen5DaysOrLess(t *testing.T) {
+	quality := 1
+
+	for i := 1; i <= 5; i++ {
+		bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", i, quality}
+		bsPasses.Update()
+		assert.Equal(t, quality+3, bsPasses.Quality())
+	}
+}
+
+func Test_BackStagePasses_Update_DropsQualityToZeroAfterTheSellInDate(t *testing.T) {
+	quality := 10
+	bsPasses := &Item{"Backstage passes to a TAFKAL80ETC concert", 0, quality}
+	bsPasses.Update()
+
+	assert.Equal(t, 0, bsPasses.Quality())
 }
